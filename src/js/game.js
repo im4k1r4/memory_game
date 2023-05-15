@@ -1,5 +1,7 @@
-// DECLARO O GRID (QUE POSSUI AS DIVS DA CARTA, FRONT E BACK)
+// DECLARO OS ITENS DO GRID (QUE POSSUI AS DIVS DA CARTA, FRONT E BACK, NOME PLAYER E TEMPO)
 const grid = document.querySelector('.grid');
+const spanPlayer = document.querySelector('.player');
+const timer = document.querySelector('.timer');
 
 // ARRAY COM O NOME DAS CARTAS
 const characters = [
@@ -31,7 +33,8 @@ const checkEndGame = () => {
     const disabledCards = document.querySelectorAll('.disabled-card');
 
     if (disabledCards.length === 20) {
-        alert('Parabéns, você conseguiu!');
+        clearInterval(this.loop);
+        alert(`Parabéns ${spanPlayer.innerHTML}! Seu tempo foi: ${timer.innerHTML}`);
     }
 }
 
@@ -102,7 +105,7 @@ const createCard = (character) => {
     return card;
 }
 
-//FN QUE GERA O JOGO:
+// FN QUE GERA O JOGO:
 const loadGame = () => {
 
     const duplicateCharacters = [ ...characters, ...characters ];
@@ -117,5 +120,22 @@ const loadGame = () => {
 
 }
 
-//GERANDO O JOGO
-loadGame();
+// FN DO TEMPO
+const startTimer = () => {
+    this.loop = setInterval(() => { // ID DO SET INTERVAL PRA RECUPERAR DEPOIS
+        const currentTime = +timer.innerHTML;
+        timer.innerHTML = currentTime +1;
+    }, 1000);
+}
+
+// QUANDO A TELA TERMINAR DE CARREGAR EXECUTA A FN DE CARREGAR O JOGO
+window.onload = () => {
+    const playerName = localStorage.getItem('player');
+
+    spanPlayer.innerHTML = playerName;
+
+    //GERANDO O JOGO
+    loadGame();
+    startTimer();
+}
+
